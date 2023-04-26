@@ -6,6 +6,8 @@ my username: kamilszymczak1
 codeforces - Codeforces (https://codeforces.com/) - a programming contest website based in Russia,
 my username: kamilszymczak1
 
+The problems in the codeforces directory are grouped by contests where they appeared. For instance, the Codeforces Round 777 (div2) could be found at codeforces.com/contest/1647, so my solutions to the problems from the round can be found in the directory codeforces/contests/1647.
+
 cses - The CSES Problem Set (https://cses.fi/problemset/) - a collection of algorithmic programming problems,
 my username: kamilszymczak1
 
