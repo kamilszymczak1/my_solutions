@@ -79,28 +79,18 @@ void test_case() {
         segment seg = *s.begin();
         s.erase(s.begin());
         
-    //    cout << "l = " << seg.l << ", r = " << seg.r << '\n' << flush;
-        
         vector<int>splits;
         pair<long long, int>p = t.get_min(seg.l, seg.r);
         long long lo = p.first;
         do {
            t.update(p.second, inf);
-         //  cout << "p.second = " << p.second << '\n';
            splits.push_back(p.second);
            p = t.get_min(seg.l, seg.r);
         } while(p.first == lo);
         
         sort(splits.begin(), splits.end());
         
-//         cout << "splits = ";
-//         for(int x : splits)
-//             cout << x << ' ';
-//         cout << '\n' << flush;
-        
         long long rows = lo - seg.level;
-        
-     //   cout << "rows = " << rows << '\n';
         
         if(m > rows * seg.len()) {
             result += (seg.len() - 1) * rows;

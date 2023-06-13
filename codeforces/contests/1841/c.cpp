@@ -43,7 +43,6 @@ void test_case() {
         for(int j = v[i] + 1; j < 5; j++)
             cnt_higher_sum += cnt[j];
         if(cnt_higher_sum == 1) {
-            //cout << "from " << i + 1 << " to " << right[1].second << '\n';
             negative_cnt_left[right[1].second][v[i]]++;
         }
         sign[i] = cnt_higher_sum == 0 ? 1 : -1;
@@ -63,9 +62,7 @@ void test_case() {
     fill(cnt.begin(), cnt.end(), 0);
     
     for(int i = n - 1; i >= 0; i--) {
-       // cout << "i = " << i << '\n';
         for(int j = 0; j < v[i]; j++) {
-            //I make the value smaller
             long long local_sum = total_sum;
             local_sum -= sign[i] * val[v[i]];
             
