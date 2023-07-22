@@ -17,108 +17,69 @@ bool operator< (query a, query b) {
 }
 
 struct solver {
-    vector<bool>status;
-    set<int>ones, double_ones, odd_zeroes, even_zeroes;
-    solver(int n) {
-        status.resize(n, false);
-        if(n % 2 == 0) {
-            even_zeroes.insert(0);
-        } else {
-            odd_zeroes.insert(0);
+    struct Node {
+        int x[3], y[3];
+        Node() {
+            for(int i = 0; i < 3; i++)
+                x[i] = y[i] = 0;
         }
-        ones.insert(-1);
-        ones.insert(n);
+        Node(int _x1, int _x2, int _x3, int _y1, int _y2, int _y3) {
+            x[0] = _x1; y[0] = _y1;
+            x[1] = _x2; y[1] = _y2;
+            x[2] = _x3; y[2] = _y3;
+        }
+    };
+    const Node zero_node = Node(0, 0, 0, 1, 2, 1);
+    const Node one_node = Node(1, 0, 0, 0, 0, 1);
+    vector<Node>nodes;
+    int leaf_count;
+    
+    Node merge(Node left, Node right) {
+        Node result;
+        for(int my_y = 0; my_y < 3; my_y++) {
+            int new_x = left.x[my_y];
+            int new_y = left.y[my_y];
+            new_x += right.x[new_y];
+            new_y = right.y[new_y];
+            result.x[my_y] = new_x;
+            result.y[my_y] = new_y;
+        }
+        return result;
+    }
+    
+    solver(int n) {
+        for(leaf_count = 1; leaf_count < n; leaf_count *= 2) {}
+        nodes.resize(leaf_count * 2, zero_node);
+        for(int i = leaf_count - 1; i > 0; i--)
+            nodes[i] = merge(nodes[i * 2], nodes[i * 2 + 1]);
     }
     
     void toggle(int x) {
-        cout << "toggle " << x << "\n" << flush;
-        status[x] = true;
-        ones.insert(x);
-        if(x != 0 && status[x - 1] == true)
-            double_ones.insert(x - 1);
-        if(x + 1 != (int)status.size() && status[x + 1] == true)
-            double_ones.insert(x);
-        
-        if((x == 0 || status[x - 1] == true) && (x + 1 == (int)status.size() || status[x + 1] == true)) {
-            odd_zeroes.erase(odd_zeroes.find(x));
-        }
-        
-        if((x == 0 || status[x - 1] == true) && x + 1 != (int)status.size() && status[x + 1] == false) {
-            if(odd_zeroes.find(x) != odd_zeroes.end()) {
-                odd_zeroes.erase(odd_zeroes.find(x));
-                even_zeroes.insert(x + 1);
-            } else {
-                even_zeroes.erase(even_zeroes.find(x));
-                odd_zeroes.insert(x + 1);
-            }
-        }
-        
-        if((x + 1 == (int)status.size() || status[x + 1] == true) && x != 0 && status[x - 1] == false) {
-            int left_one = *(--ones.find(x));
-            if(odd_zeroes.find(left_one + 1) != odd_zeroes.end()) {
-                odd_zeroes.erase(odd_zeroes.find(left_one + 1));
-                even_zeroes.insert(left_one + 1);
-            } else {
-                even_zeroes.erase(even_zeroes.find(left_one + 1));
-                odd_zeroes.insert(left_one + 1);
-            }
-        }
-        
-        if(x != 0 && status[x - 1] == false && x + 1 != (int)status.size() && status[x + 1] == false) {
-            int left_one = *(--ones.find(x));
-            int parity = odd_zeroes.find(left_one + 1) == odd_zeroes.end() ? 0 : 1;
-            
-            cout << "left_one = " << left_one << '\n' << flush;
-            cout << "parity = " << parity << '\n' << flush;
-            
-            if(parity == 1) {
-                odd_zeroes.erase(odd_zeroes.find(left_one + 1));
-            } else {
-                even_zeroes.erase(even_zeroes.find(left_one + 1));
-            }
-            
-            if((x - 1 - left_one) % 2 == 0) {
-                even_zeroes.insert(left_one + 1);
-            } else {
-                odd_zeroes.insert(left_one + 1);
-            }
-            
-            if((parity + 1 - (x - 1 - left_one) % 2) % 2 == 0) {
-                even_zeroes.insert(x + 1);
-            } else {
-                odd_zeroes.insert(x + 1);
-            }
-        }
-        
-        
-        cout << "toggle end\n" << flush;
+        nodes[x + leaf_count] = one_node;
+        for(x = (x + leaf_count) / 2; x > 0; x /= 2)
+            nodes[x] = merge(nodes[x * 2], nodes[x * 2 + 1]);
     }
     
     bool query(int l, int r) {
-        cout << "query\n" << flush;
-        auto l_it = ones.lower_bound(l);
-        if(l_it == ones.end() || *l_it > r)
-            return false;
-        int ll = *l_it;
-        int rr = *(--ones.upper_bound(r));
-        
-        auto d_o = double_ones.lower_bound(ll);
-        if(d_o != double_ones.end() && *d_o < r)
-            return true;
-        
-        auto left_double_zero_it = even_zeroes.lower_bound(ll);
-        
-        if(left_double_zero_it == even_zeroes.end() || *left_double_zero_it >= rr) {
-            //there is no double zero
-            if(l == ll && r == rr && status[l] == true)
-                return true;
-            return false;
+        l += leaf_count;
+        r += leaf_count;
+        if(l == r)
+            return nodes[l].x[0] == 1;
+        vector<int>path_l(1, l), path_r(1, r);
+        while(l / 2 != r / 2) {
+            if(l % 2 == 0)
+                path_l.push_back(l + 1);
+            if(r % 2 == 1)
+                path_r.push_back(r - 1);
+            l /= 2;
+            r /= 2;
         }
-        auto right_double_zero_it = --even_zeroes.upper_bound(rr);
-        
-        if(left_double_zero_it == right_double_zero_it)
-            return false;
-        return true;
+        Node result = nodes[path_l[0]];
+        for(int i = 1; i < (int)path_l.size(); i++)
+            result = merge(result, nodes[path_l[i]]);
+        for(int i = (int)path_r.size() - 1; i >= 0; i--)
+            result = merge(result, nodes[path_r[i]]);
+        return result.x[0] > result.y[0];
     }
 };
 
@@ -143,11 +104,7 @@ int main() {
     
     
     bool searching;
-    
-    int it = 0;
     do {
-        it++;
-        cout << "next iteration\n" << flush;
         searching = false;
         
         sort(queries.begin(), queries.end());
@@ -157,18 +114,14 @@ int main() {
         int v_ind = 0;
         for(query &q : queries) {
             
-            cout << "mid = " << q.mid() << '\n';
-            
-            while(v_ind < n && v[v_ind].first >= q.mid()) {
+            while(v_ind < n && v[v_ind].first >= v[q.mid()].first) {
                 my_solver.toggle(v[v_ind].second);
                 v_ind++;
             }
             
             if(my_solver.query(q.l, q.r)) {
-                cout << "true\n";
                 q.hi = q.mid();
             } else {
-                cout << "false\n";
                 q.lo = q.mid() + 1;
             }
             
@@ -176,16 +129,11 @@ int main() {
                 searching = true;
         }
         
-        cout << "bounds\n";
-        for(query q : queries) {
-            cout << q.id + 1 << ": " << q.lo << ' ' << q.hi << '\n' << flush;
-        }
-        
-    } while(searching && it < 3);
+    } while(searching);
     
     vector<int>answer(q);
     for(query q : queries)
-        answer[q.id] = q.lo;
+        answer[q.id] = v[q.lo].first;
     
     for(int x : answer)
         cout << x << '\n';
