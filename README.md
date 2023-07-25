@@ -1,16 +1,37 @@
-My solutions to problems from some of the competitive programming platforms I use and some of the competitions I have taken part in.
+# My Solution to Various Competitive Programming Problems
 
-atcoder - AtCoder (https://atcoder.jp/) - a programming contest website based in Japan,
-my username: kamilszymczak1
+In this repository you can find my solutions to problems from some of the competitive programming platforms I use and some of the competitions I have taken part in.
 
-codeforces - Codeforces (https://codeforces.com/) - a programming contest website based in Russia,
-my username: kamilszymczak1
+Here is an overview of the contents of this repository:
 
-The problems in the codeforces directory are grouped by contests where they appeared. For instance, the Codeforces Round 777 (div2) could be found at codeforces.com/contest/1647, so my solutions to the problems from the round can be found in the directory codeforces/contests/1647.
+## ac - [AtCoder](https://atcoder.jp/)
 
-cses - The CSES Problem Set (https://cses.fi/problemset/) - a collection of algorithmic programming problems,
-my username: kamilszymczak1
+A programming contest website based in Japan,
 
-pa - Potyczki Algorytmiczne (problems from previous editions of the competition can be found at https://szkopul.edu.pl/task_archive/pa/) - a Polish nationwide open programming contest
+My username: kamilszymczak1
 
-poi - Polish Olympiad in Informatics (problems from previous editions of the competition can be found at https://szkopul.edu.pl/task_archive/oi/) - a Polish nationwide programming contest for highschoolers
+## cf - [Codeforces](https://codeforces.com)
+
+A programming contest website based in Russia,
+
+My username: kamilszymczak1
+
+The problems in the codeforces directory are grouped by contests where they appeared. For instance, the Codeforces Round 777 (div2) could be found at codeforces.com/contest/1647, so my solutions to the problems from the round can be found in the directory cf/contests/1647.
+
+## cses - [The CSES Problem Set](https://cses.fi/problemset/)
+
+A collection of algorithmic programming problems
+
+My username: kamilszymczak1
+
+## pa - [Potyczki Algorytmiczne](https://potyczki.mimuw.edu.pl/)
+
+A Polish nationwide open programming contest
+
+Problems from previous editions of the competition can be found at https://szkopul.edu.pl/task_archive/pa/
+
+## poi - [Polish Olympiad in Informatics](https://oi.edu.pl/)
+
+The most presitgious Polish nationwide programming contest for highschoolers
+
+Problems from previous editions of the competition can be found at https://szkopul.edu.pl/task_archive/oi/
